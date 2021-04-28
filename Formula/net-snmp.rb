@@ -2,12 +2,12 @@ class NetSnmp < Formula
   desc "Implements SNMP v1, v2c, and v3, using IPv4 and IPv6"
   homepage "http://www.net-snmp.org/"
   url "https://downloads.sourceforge.net/project/net-snmp/net-snmp/5.9/net-snmp-5.9.tar.gz"
+  version "5.8_2"
   sha256 "04303a66f85d6d8b16d3cc53bde50428877c82ab524e17591dfceaeb94df6071"
   license "Net-SNMP"
+  revision 1
   head "https://github.com/net-snmp/net-snmp.git"
   # ...previously used "https://git.code.sf.net/p/net-snmp/code" but github seems more current
-  revision 1
-  version "5.8_2"
 
   livecheck do
     url :stable
@@ -16,9 +16,9 @@ class NetSnmp < Formula
 
   bottle do
     rebuild 1
-    sha256 "4519ee0aa3a4ebdcb4235466861a13b41ff19363a2b83fce26ab507cdc40a015" => :big_sur
-    sha256 "97ca904418f6fc7488478cec55106ce51987eb139fea9f90b38afa4240c4683b" => :catalina
-    sha256 "ffac347f7d928bdc233355f324cff14a0751315661ef480d121362085b56f8d3" => :mojave
+    sha256 big_sur:  "4519ee0aa3a4ebdcb4235466861a13b41ff19363a2b83fce26ab507cdc40a015"
+    sha256 catalina: "97ca904418f6fc7488478cec55106ce51987eb139fea9f90b38afa4240c4683b"
+    sha256 mojave:   "ffac347f7d928bdc233355f324cff14a0751315661ef480d121362085b56f8d3"
   end
 
   keg_only :provided_by_macos

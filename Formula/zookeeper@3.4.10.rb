@@ -6,21 +6,20 @@ class ZookeeperAT3410 < Formula
   sha256 "7f7f5414e044ac11fee2a1e0bc225469f51fb0cdf821e67df762a43098223f27"
 
   bottle do
-    cellar :any
     rebuild 1
-    sha256 "08431d9c2f04f5a735149f374975df4f2e0d8140b1cc901f505d379ef7e20fe0" => :high_sierra
-    sha256 "8c7304be183d4c28c0f5d88e22626188c76794bee004e1b330c3e79bf5ae9d53" => :sierra
-    sha256 "2d792cb3963a7caf57922635888ae4e3cf363ef5a81d23f13a11d0ee42a780cf" => :el_capitan
+    sha256 cellar: :any, high_sierra: "08431d9c2f04f5a735149f374975df4f2e0d8140b1cc901f505d379ef7e20fe0"
+    sha256 cellar: :any, sierra:      "8c7304be183d4c28c0f5d88e22626188c76794bee004e1b330c3e79bf5ae9d53"
+    sha256 cellar: :any, el_capitan:  "2d792cb3963a7caf57922635888ae4e3cf363ef5a81d23f13a11d0ee42a780cf"
   end
 
   head do
     url "https://svn.apache.org/repos/asf/zookeeper/trunk"
 
     depends_on "ant" => :build
-    depends_on "cppunit" => :build
-    depends_on "libtool" => :build
     depends_on "autoconf" => :build
     depends_on "automake" => :build
+    depends_on "cppunit" => :build
+    depends_on "libtool" => :build
   end
 
   option "with-perl", "Build Perl bindings"
@@ -58,10 +57,10 @@ class ZookeeperAT3410 < Formula
 
   def install
     # Don't try to build extensions for PPC
-    if Hardware::CPU.is_32_bit?
-      ENV["ARCHFLAGS"] = "-arch #{Hardware::CPU.arch_32_bit}"
+    ENV["ARCHFLAGS"] = if Hardware::CPU.is_32_bit?
+      "-arch #{Hardware::CPU.arch_32_bit}"
     else
-      ENV["ARCHFLAGS"] = Hardware::CPU.universal_archs.as_arch_flags
+      Hardware::CPU.universal_archs.as_arch_flags
     end
 
     if build.head?
@@ -110,6 +109,7 @@ class ZookeeperAT3410 < Formula
 
     Pathname.glob("#{libexec}/bin/*.sh") do |path|
       next if path == libexec+"bin/zkEnv.sh"
+
       script_name = path.basename
       bin_name    = path.basename ".sh"
       (bin+bin_name).write shim_script(script_name)
@@ -127,36 +127,37 @@ class ZookeeperAT3410 < Formula
     (etc/"zookeeper").install ["conf/zoo.cfg", "conf/zoo_sample.cfg"]
   end
 
-  plist_options :manual => "zkServer start"
+  plist_options manual: "zkServer start"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-      <dict>
-        <key>EnvironmentVariables</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
         <dict>
-           <key>SERVER_JVMFLAGS</key>
-           <string>-Dapple.awt.UIElement=true</string>
+          <key>EnvironmentVariables</key>
+          <dict>
+             <key>SERVER_JVMFLAGS</key>
+             <string>-Dapple.awt.UIElement=true</string>
+          </dict>
+          <key>KeepAlive</key>
+          <dict>
+            <key>SuccessfulExit</key>
+            <false/>
+          </dict>
+          <key>Label</key>
+          <string>#{plist_name}</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>#{opt_bin}/zkServer</string>
+            <string>start-foreground</string>
+          </array>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>WorkingDirectory</key>
+          <string>#{var}</string>
         </dict>
-        <key>KeepAlive</key>
-        <dict>
-          <key>SuccessfulExit</key>
-          <false/>
-        </dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_bin}/zkServer</string>
-          <string>start-foreground</string>
-        </array>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>WorkingDirectory</key>
-        <string>#{var}</string>
-      </dict>
-    </plist>
+      </plist>
     EOS
   end
 

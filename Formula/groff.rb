@@ -12,17 +12,21 @@ class Groff < Formula
   end
 
   bottle do
-    sha256 "1e46ef402875ec8cc1bc1fc05b748607822ed6c2a58508dc83d3f0c8cf7f5c4e" => :big_sur
-    sha256 "f273750ee87dd64d4ae3ec08f3f6ac83a5e15eb0c2e08f9ebaf488bf9a739f96" => :arm64_big_sur
-    sha256 "623edd28279abd071901f92502fd3a388aaf4357113f26b37ee715a9d11d05ab" => :catalina
-    sha256 "4fed5ee8032eb7957bd964b0eb873f8954a4d427f0c602284992daca52e7cb6d" => :mojave
+    sha256 arm64_big_sur: "f273750ee87dd64d4ae3ec08f3f6ac83a5e15eb0c2e08f9ebaf488bf9a739f96"
+    sha256 big_sur:       "1e46ef402875ec8cc1bc1fc05b748607822ed6c2a58508dc83d3f0c8cf7f5c4e"
+    sha256 catalina:      "623edd28279abd071901f92502fd3a388aaf4357113f26b37ee715a9d11d05ab"
+    sha256 mojave:        "4fed5ee8032eb7957bd964b0eb873f8954a4d427f0c602284992daca52e7cb6d"
   end
+
+  option "with-full-html", "Include the full HTML generation pipeline"
+  option "with-uchardet", "Use uchardet to detact unknown character sets"
 
   depends_on "pkg-config" => :build
   depends_on "ghostscript"
   depends_on "netpbm"
   depends_on "psutils"
   depends_on "uchardet"
+  depends_on "uchardet" => :optional
 
   uses_from_macos "libiconv"
   uses_from_macos "perl"
@@ -33,11 +37,6 @@ class Groff < Formula
     url "https://raw.githubusercontent.com/Homebrew/formula-patches/8059b3027a4aa68d8f42e1281cc3a81449ca0010/groff/1.22.4.patch"
     sha256 "aaea94b65169357a9a2c6e8f71dea35c87eed3e8f49aaa27003cd0893b54f7c4"
   end
-
-  option "with-full-html", "Include the full HTML generation pipeline"
-  option "with-uchardet", "Use uchardet to detact unknown character sets"
-
-  depends_on "uchardet" => :optional
 
   if build.with?("full-html")
     depends_on "netpbm"

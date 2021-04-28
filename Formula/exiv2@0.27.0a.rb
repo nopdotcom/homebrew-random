@@ -6,10 +6,9 @@ class Exiv2AT0270a < Formula
   head "https://github.com/Exiv2/exiv2.git"
 
   bottle do
-    cellar :any
-    sha256 "0d55621ba183fee1850242a07fd5cd78622daff82f9a4877a4c1aa14e114cbf7" => :mojave
-    sha256 "36d48ac8ec05df9ae69d35561d14dde24e5a6b31e44fae3235d648c62bb9abfc" => :high_sierra
-    sha256 "5c0229876d4183240896b8d31347adf99c90ff45b8d3dd45ec5d13bdd83c1e2b" => :sierra
+    sha256 cellar: :any, mojave:      "0d55621ba183fee1850242a07fd5cd78622daff82f9a4877a4c1aa14e114cbf7"
+    sha256 cellar: :any, high_sierra: "36d48ac8ec05df9ae69d35561d14dde24e5a6b31e44fae3235d648c62bb9abfc"
+    sha256 cellar: :any, sierra:      "5c0229876d4183240896b8d31347adf99c90ff45b8d3dd45ec5d13bdd83c1e2b"
   end
 
   depends_on "cmake" => :build
